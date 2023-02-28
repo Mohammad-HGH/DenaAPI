@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:Server=(localdb):mssqllocaldb;Database=Denadb;Trusted_Connection=True;MultipleActiveResultSets=true",
+      "dynamicId": null
+    }
+  }
+}

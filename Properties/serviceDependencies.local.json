@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "secretStore": "LocalSecretsFile",
+      "type": "mssql.local",
+      "connectionId": "ConnectionStrings:Server=(localdb):mssqllocaldb;Database=Denadb;Trusted_Connection=True;MultipleActiveResultSets=true",
+      "dynamicId": null
+    }
+  }
+}
