@@ -16,7 +16,7 @@ namespace DenaAPI
         }
 
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-        public virtual DbSet<Task> Tasks { get; set; }
+        
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,25 +47,7 @@ namespace DenaAPI
                 entity.ToTable("RefreshToken");
             });
 
-            modelBuilder.Entity<Task>(entity =>
-            {
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(100);
-
-                entity.Property(e => e.Ts)
-                    .HasColumnType("smalldatetime")
-                    .HasColumnName("TS");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Tasks)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Task_User");
-
-                entity.ToTable("Task");
-            });
+            
 
             modelBuilder.Entity<User>(entity =>
             {

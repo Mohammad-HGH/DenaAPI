@@ -51,7 +51,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<ITaskService, TaskService>();
+
 
 var app = builder.Build();
 app.UseCors(AllowAllHeadersPolicy);
