@@ -11,7 +11,7 @@ namespace DenaAPI.Models;
 [Table("User")]
 public partial class User
 {
-    [Key]
+    /*[Key]
     public int Id { get; set; }
 
     [Required]
@@ -43,5 +43,22 @@ public partial class User
     public virtual ICollection<RefreshToken> RefreshTokens { get; } = new List<RefreshToken>();
 
     [InverseProperty("User")]
-    public virtual ICollection<Task> Tasks { get; } = new List<Task>();
+    public virtual ICollection<Task> Tasks { get; } = new List<Task>();*/
+    public User()
+    {
+        RefreshTokens = new HashSet<RefreshToken>();
+        Tasks = new HashSet<Task>();
+    }
+
+    public int Id { get; set; }
+    public string Email { get; set; }
+    public string Password { get; set; }
+    public string PasswordSalt { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public DateTime Ts { get; set; }
+    public bool Active { get; set; }
+
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+    public virtual ICollection<Task> Tasks { get; set; }
 }
