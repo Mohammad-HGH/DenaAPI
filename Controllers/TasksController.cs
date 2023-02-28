@@ -34,7 +34,7 @@ namespace DenaAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(TaskRequest taskRequest)
+        public async Task<IActionResult> Post([FromForm] TaskRequest taskRequest)
         {
             var task = new Task { IsCompleted = taskRequest.IsCompleted, Ts = taskRequest.Ts, Name = taskRequest.Name, UserId = UserID };
 

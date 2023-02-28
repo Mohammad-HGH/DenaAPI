@@ -73,7 +73,7 @@ namespace DenaAPI.Controllers
 
         [HttpPost]
         [Route("signup")]
-        public async Task<IActionResult> Signup(SignupRequest signupRequest)
+        public async Task<IActionResult> Signup([FromForm] SignupRequest signupRequest)
         {
             if (!ModelState.IsValid)
             {
