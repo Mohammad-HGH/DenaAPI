@@ -1,6 +1,5 @@
 ﻿using DenaAPI.Responses;
 
-
 namespace DenaAPI.Interfaces
 {
     public interface ITaskService

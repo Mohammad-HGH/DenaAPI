@@ -1,11 +1,26 @@
+using DenaAPI;
 using DenaAPI.Helpers;
 using DenaAPI.Interfaces;
 using DenaAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
+const string AllowAllHeadersPolicy = "AllowAllHeadersPolicy";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AllowAllHeadersPolicy,
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 // Add services to the container.
 
@@ -14,13 +29,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddTransient<ITokenService, TokenService>();
-
-
-builder.Services.AddTransient<IUserService, UserService>();
-
-
-builder.Services.AddTransient<ITaskService, TaskService>();
+builder.Services.AddDbContext<DenaDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("TasksDbConnectionString")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -40,11 +49,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-builder.Services.AddAuthorization();
-
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ITaskService, TaskService>();
 
 var app = builder.Build();
-
+app.UseCors(AllowAllHeadersPolicy);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -54,10 +64,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

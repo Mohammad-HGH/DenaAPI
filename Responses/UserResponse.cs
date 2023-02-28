@@ -1,6 +1,4 @@
-﻿using DenaAPI.Responses;
-
-namespace DenaAPI.Responses
+﻿namespace DenaAPI.Responses
 {
     public class UserResponse : BaseResponse
     {

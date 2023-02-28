@@ -1,24 +1,21 @@
-﻿using DenaAPI.Interfaces;
-using DenaAPI.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using DenaAPI.Interfaces;
 using DenaAPI.Responses;
-using Microsoft.EntityFrameworkCore;
 
-
-namespace TasksApi.Services
+namespace DenaAPI.Services
 {
-
     public class TaskService : ITaskService
     {
-        private readonly DenadbContext denadbContext;
+        private readonly DenaDbContext tasksDbContext;
 
-        public TaskService(DenadbContext denadbContext)
+        public TaskService(DenaDbContext tasksDbContext)
         {
-            this.denadbContext = denadbContext;
+            this.tasksDbContext = tasksDbContext;
         }
 
         public async Task<DeleteTaskResponse> DeleteTask(int taskId, int userId)
         {
-            var task = await denadbContext.Tasks.FindAsync(taskId);
+            var task = await tasksDbContext.Tasks.FindAsync(taskId);
 
             if (task == null)
             {
@@ -40,9 +37,9 @@ namespace TasksApi.Services
                 };
             }
 
-            denadbContext.Tasks.Remove(task);
+            tasksDbContext.Tasks.Remove(task);
 
-            var saveResponse = await denadbContext.SaveChangesAsync();
+            var saveResponse = await tasksDbContext.SaveChangesAsync();
 
             if (saveResponse >= 0)
             {
@@ -63,7 +60,7 @@ namespace TasksApi.Services
 
         public async Task<GetTasksResponse> GetTasks(int userId)
         {
-            var tasks = await denadbContext.Tasks.Where(o => o.UserId == userId).ToListAsync();
+            var tasks = await tasksDbContext.Tasks.Where(o => o.UserId == userId).ToListAsync();
 
             return new GetTasksResponse { Success = true, Tasks = tasks };
 
@@ -73,18 +70,18 @@ namespace TasksApi.Services
         {
             if (task.Id == 0)
             {
-                await denadbContext.Tasks.AddAsync(task);
+                await tasksDbContext.Tasks.AddAsync(task);
             }
             else
             {
-                var taskRecord = await denadbContext.Tasks.FindAsync(task.Id);
+                var taskRecord = await tasksDbContext.Tasks.FindAsync(task.Id);
 
                 taskRecord.IsCompleted = task.IsCompleted;
                 taskRecord.Ts = task.Ts;
             }
-
-            var saveResponse = await denadbContext.SaveChangesAsync();
-
+            
+            var saveResponse = await tasksDbContext.SaveChangesAsync();
+            
             if (saveResponse >= 0)
             {
                 return new SaveTaskResponse

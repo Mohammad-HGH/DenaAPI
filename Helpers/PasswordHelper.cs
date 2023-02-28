@@ -14,7 +14,7 @@ namespace DenaAPI.Helpers
         }
         public static string HashUsingPbkdf2(string password, byte[] salt)
         {
-            byte[] derivedKey = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, iterationCount: 300000, 32);
+            byte[] derivedKey = KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, iterationCount: 100000, 32);
 
             return Convert.ToBase64String(derivedKey);
         }

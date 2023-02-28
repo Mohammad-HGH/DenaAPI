@@ -1,27 +1,25 @@
-﻿using DenaAPI.Helpers;
+﻿using Microsoft.EntityFrameworkCore;
+using DenaAPI.Helpers;
 using DenaAPI.Interfaces;
-using DenaAPI.Models;
 using DenaAPI.Requests;
 using DenaAPI.Responses;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace DenaAPI.Services
 {
     public class UserService : IUserService
     {
-        private readonly DenadbContext denadbContext;
+        private readonly DenaDbContext tasksDbContext;
         private readonly ITokenService tokenService;
 
-        public UserService(DenadbContext denadbContext, ITokenService tokenService)
+        public UserService(DenaDbContext tasksDbContext, ITokenService tokenService)
         {
-            this.denadbContext = denadbContext;
+            this.tasksDbContext = tasksDbContext;
             this.tokenService = tokenService;
         }
 
         public async Task<UserResponse> GetInfoAsync(int userId)
         {
-            var user = await denadbContext.Users.FindAsync(userId);
+            var user = await tasksDbContext.Users.FindAsync(userId);
 
             if (user == null)
             {
@@ -45,7 +43,7 @@ namespace DenaAPI.Services
 
         public async Task<TokenResponse> LoginAsync(LoginRequest loginRequest)
         {
-            var user = denadbContext.Users.SingleOrDefault(user => user.Active && user.Email == loginRequest.Email);
+            var user = tasksDbContext.Users.SingleOrDefault(user => user.Active && user.Email == loginRequest.Email);
 
             if (user == null)
             {
@@ -82,16 +80,16 @@ namespace DenaAPI.Services
 
         public async Task<LogoutResponse> LogoutAsync(int userId)
         {
-            var refreshToken = await denadbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == userId);
+            var refreshToken = await tasksDbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == userId);
 
             if (refreshToken == null)
             {
                 return new LogoutResponse { Success = true };
             }
 
-            denadbContext.RefreshTokens.Remove(refreshToken);
+            tasksDbContext.RefreshTokens.Remove(refreshToken);
 
-            var saveResponse = await denadbContext.SaveChangesAsync();
+            var saveResponse = await tasksDbContext.SaveChangesAsync();
 
             if (saveResponse >= 0)
             {
@@ -104,7 +102,7 @@ namespace DenaAPI.Services
 
         public async Task<SignupResponse> SignupAsync(SignupRequest signupRequest)
         {
-            var existingUser = await denadbContext.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
+            var existingUser = await tasksDbContext.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
 
             if (existingUser != null)
             {
@@ -116,8 +114,7 @@ namespace DenaAPI.Services
                 };
             }
 
-            if (signupRequest.Password != signupRequest.ConfirmPassword)
-            {
+            if (signupRequest.Password != signupRequest.ConfirmPassword) {
                 return new SignupResponse
                 {
                     Success = false,
@@ -150,9 +147,9 @@ namespace DenaAPI.Services
                 Active = true // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true
             };
 
-            await denadbContext.Users.AddAsync(user);
+            await tasksDbContext.Users.AddAsync(user);
 
-            var saveResponse = await denadbContext.SaveChangesAsync();
+            var saveResponse = await tasksDbContext.SaveChangesAsync();
 
             if (saveResponse >= 0)
             {

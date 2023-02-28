@@ -1,10 +1,8 @@
-﻿using DenaAPI.Controllers;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using DenaAPI.Interfaces;
-using DenaAPI.Models;
 using DenaAPI.Requests;
 using DenaAPI.Responses;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DenaAPI.Controllers
 {
@@ -14,11 +12,13 @@ namespace DenaAPI.Controllers
     {
         private readonly IUserService userService;
         private readonly ITokenService tokenService;
+
         public UsersController(IUserService userService, ITokenService tokenService)
         {
             this.userService = userService;
             this.tokenService = tokenService;
         }
+
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginRequest loginRequest)
@@ -31,7 +31,9 @@ namespace DenaAPI.Controllers
                     ErrorCode = "L01"
                 });
             }
+
             var loginResponse = await userService.LoginAsync(loginRequest);
+
             if (!loginResponse.Success)
             {
                 return Unauthorized(new
@@ -40,8 +42,10 @@ namespace DenaAPI.Controllers
                     loginResponse.Error
                 });
             }
+
             return Ok(loginResponse);
         }
+
         [HttpPost]
         [Route("refresh_token")]
         public async Task<IActionResult> RefreshToken(RefreshTokenRequest refreshTokenRequest)
@@ -54,14 +58,19 @@ namespace DenaAPI.Controllers
                     ErrorCode = "R01"
                 });
             }
+
             var validateRefreshTokenResponse = await tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
+
             if (!validateRefreshTokenResponse.Success)
             {
-                return UnprocessableEntity(validateRefreshTokenResponse);
+                return BadRequest(validateRefreshTokenResponse);
             }
+
             var tokenResponse = await tokenService.GenerateTokensAsync(validateRefreshTokenResponse.UserId);
-            return Ok(new { AccessToken = tokenResponse.Item1, Refreshtoken = tokenResponse.Item2 });
+
+            return Ok(new TokenResponse { AccessToken = tokenResponse.Item1, RefreshToken = tokenResponse.Item2 });
         }
+
         [HttpPost]
         [Route("signup")]
         public async Task<IActionResult> Signup(SignupRequest signupRequest)
@@ -80,23 +89,44 @@ namespace DenaAPI.Controllers
             }
 
             var signupResponse = await userService.SignupAsync(signupRequest);
+
             if (!signupResponse.Success)
             {
                 return UnprocessableEntity(signupResponse);
             }
+
             return Ok(signupResponse.Email);
         }
+
         [Authorize]
         [HttpPost]
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
             var logout = await userService.LogoutAsync(UserID);
+
             if (!logout.Success)
             {
                 return UnprocessableEntity(logout);
             }
+
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("info")]
+        public async Task<IActionResult> Info()
+        {
+            var userResponse = await userService.GetInfoAsync(UserID);
+
+            if (!userResponse.Success)
+            {
+                return UnprocessableEntity(userResponse);
+            }
+
+            return Ok(userResponse);
+
         }
     }
 }

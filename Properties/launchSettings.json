@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "http": {
+    "DenaAPI": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -8,17 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5009"
-    },
-    "https": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7162;http://localhost:5009"
+      "applicationUrl": "https://localhost:7217;http://localhost:5217"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -41,8 +31,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:34118",
-      "sslPort": 44378
+      "applicationUrl": "http://localhost:47748",
+      "sslPort": 44371
     }
   }
 }
