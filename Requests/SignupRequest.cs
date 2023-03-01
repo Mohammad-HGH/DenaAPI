@@ -15,8 +15,6 @@ namespace DenaAPI.Requests
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
-        public DateTime Ts { get; set; }
 
     }
 }
