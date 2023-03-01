@@ -16,7 +16,7 @@ namespace DenaAPI
         }
 
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
-        
+
         public virtual DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,7 +47,7 @@ namespace DenaAPI
                 entity.ToTable("RefreshToken");
             });
 
-            
+
 
             modelBuilder.Entity<User>(entity =>
             {

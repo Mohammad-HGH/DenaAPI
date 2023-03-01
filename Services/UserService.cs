@@ -114,7 +114,8 @@ namespace DenaAPI.Services
                 };
             }
 
-            if (signupRequest.Password != signupRequest.ConfirmPassword) {
+            if (signupRequest.Password != signupRequest.ConfirmPassword)
+            {
                 return new SignupResponse
                 {
                     Success = false,
