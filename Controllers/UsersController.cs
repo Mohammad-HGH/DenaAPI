@@ -4,6 +4,7 @@ using DenaAPI.Interfaces;
 using DenaAPI.Requests;
 using DenaAPI.Responses;
 
+
 namespace DenaAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -30,6 +31,8 @@ namespace DenaAPI.Controllers
                     Error = "Missing login details",
                     ErrorCode = "L01"
                 });
+
+
             }
 
             var loginResponse = await userService.LoginAsync(loginRequest);
