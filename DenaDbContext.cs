@@ -67,18 +67,13 @@ namespace DenaAPI
             modelBuilder.Entity<Entities.Attribute>(entity =>
             {
                 entity.HasOne(d => d.Intermediate)
-                   .WithMany(p => p.Attributes)
-                   .HasForeignKey(d => d.Intermediate)
-                   .OnDelete(DeleteBehavior.ClientSetNull)
-                   .HasConstraintName("FK_Attribute_Intermediate");
+                    .WithMany(p => p.Attributes)
+                    .HasForeignKey(d => d.Intermediate)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Attribute_Intermediate");
                 entity.ToTable("Attribute");
             });
-            modelBuilder.Entity<Intermediate>(entity =>
-            {
 
-                entity.ToTable("Intermediate");
-
-            });
 
             modelBuilder.Entity<User>(entity =>
             {
