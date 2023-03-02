@@ -38,7 +38,7 @@ namespace DenaAPI.Controllers
             {
                 return NotFound();
             }
-            return await _context.Category.Where(c => c.ParentID == parentid).ToListAsync();
+            return await _context.Category.Where(c => c.ParentId == parentid).ToListAsync();
         }
 
         // GET: api/Categories/5
@@ -64,7 +64,7 @@ namespace DenaAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCategory(int id, Category category)
         {
-            if (id != category.ID)
+            if (id != category.Id)
             {
                 return BadRequest();
             }
@@ -102,7 +102,7 @@ namespace DenaAPI.Controllers
             _context.Category.Add(category);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCategory", new { id = category.ID }, category);
+            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
 
         // DELETE: api/Categories/5
@@ -127,7 +127,7 @@ namespace DenaAPI.Controllers
 
         private bool CategoryExists(int id)
         {
-            return (_context.Category?.Any(e => e.ID == id)).GetValueOrDefault();
+            return (_context.Category?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

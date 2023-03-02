@@ -1,6 +1,6 @@
 ﻿namespace DenaAPI.Entities
 {
-    public partial class Product
+    public partial class Attribute
     {
         public int Id { get; set; }
         public string? Name { get; set; }
