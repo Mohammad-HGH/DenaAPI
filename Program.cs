@@ -1,10 +1,11 @@
-using DenaAPI;
+﻿using DenaAPI;
 using DenaAPI.Helpers;
 using DenaAPI.Interfaces;
 using DenaAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using DenaAPI.Controllers;
 
 
 var builder = WebApplication.CreateBuilder(args);
