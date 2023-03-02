@@ -32,14 +32,14 @@ namespace DenaAPI.Helpers
             };
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 
-            return await System.Threading.Tasks.Task.Run(() => tokenHandler.WriteToken(securityToken));
+            return await Task.Run(() => tokenHandler.WriteToken(securityToken));
         }
         public static async Task<string> GenerateRefreshToken()
         {
             var secureRandomBytes = new byte[32];
 
             using var randomNumberGenerator = RandomNumberGenerator.Create();
-            await System.Threading.Tasks.Task.Run(() => randomNumberGenerator.GetBytes(secureRandomBytes));
+            await Task.Run(() => randomNumberGenerator.GetBytes(secureRandomBytes));
 
             var refreshToken = Convert.ToBase64String(secureRandomBytes);
             return refreshToken;

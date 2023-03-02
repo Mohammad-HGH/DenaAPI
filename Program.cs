@@ -62,6 +62,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+/*omit after publish completely*/
 app.UseSwagger();
 app.UseSwaggerUI();
 

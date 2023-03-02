@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using DenaAPI.Interfaces;
 using DenaAPI.Requests;
 using DenaAPI.Responses;
-
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Security.Claims;
 
 namespace DenaAPI.Controllers
 {
@@ -14,7 +17,7 @@ namespace DenaAPI.Controllers
         private readonly IUserService userService;
         private readonly ITokenService tokenService;
 
-        public UsersController(IUserService userService, ITokenService tokenService)
+        public UsersController([FromForm] IUserService userService, ITokenService tokenService)
         {
             this.userService = userService;
             this.tokenService = tokenService;
@@ -22,7 +25,7 @@ namespace DenaAPI.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
         {
             if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
             {
@@ -51,7 +54,7 @@ namespace DenaAPI.Controllers
 
         [HttpPost]
         [Route("refresh_token")]
-        public async Task<IActionResult> RefreshToken(RefreshTokenRequest refreshTokenRequest)
+        public async Task<IActionResult> RefreshToken([FromForm] RefreshTokenRequest refreshTokenRequest)
         {
             if (refreshTokenRequest == null || string.IsNullOrEmpty(refreshTokenRequest.RefreshToken) || refreshTokenRequest.UserId == 0)
             {
@@ -130,6 +133,31 @@ namespace DenaAPI.Controllers
 
             return Ok(userResponse);
 
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is UsersController controller &&
+                   EqualityComparer<HttpContext>.Default.Equals(HttpContext, controller.HttpContext) &&
+                   EqualityComparer<HttpRequest>.Default.Equals(Request, controller.Request) &&
+                   EqualityComparer<HttpResponse>.Default.Equals(Response, controller.Response) &&
+                   EqualityComparer<RouteData>.Default.Equals(RouteData, controller.RouteData) &&
+                   EqualityComparer<ModelStateDictionary>.Default.Equals(ModelState, controller.ModelState) &&
+                   EqualityComparer<ControllerContext>.Default.Equals(ControllerContext, controller.ControllerContext) &&
+                   EqualityComparer<IModelMetadataProvider>.Default.Equals(MetadataProvider, controller.MetadataProvider) &&
+                   EqualityComparer<IModelBinderFactory>.Default.Equals(ModelBinderFactory, controller.ModelBinderFactory) &&
+                   EqualityComparer<IUrlHelper>.Default.Equals(Url, controller.Url) &&
+                   EqualityComparer<IObjectModelValidator>.Default.Equals(ObjectValidator, controller.ObjectValidator) &&
+                   EqualityComparer<ProblemDetailsFactory>.Default.Equals(ProblemDetailsFactory, controller.ProblemDetailsFactory) &&
+                   EqualityComparer<ClaimsPrincipal>.Default.Equals(User, controller.User) &&
+                   UserID == controller.UserID &&
+                   EqualityComparer<IUserService>.Default.Equals(userService, controller.userService) &&
+                   EqualityComparer<ITokenService>.Default.Equals(tokenService, controller.tokenService);
+        }
+
+        public override int GetHashCode()
+        {
+            throw new NotImplementedException();
         }
     }
 }

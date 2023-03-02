@@ -8,7 +8,7 @@ namespace DenaAPI.Services
 {
     public class TokenService : ITokenService
     {
-        
+
         private readonly DenaDbContext tasksDbContext;
 
         public TokenService(DenaDbContext tasksDbContext)
@@ -16,7 +16,7 @@ namespace DenaAPI.Services
             this.tasksDbContext = tasksDbContext;
         }
 
-        public async Task<Tuple<string, string>> GenerateTokensAsync(int userId)
+        public async Task<Tuple<string, string>?> GenerateTokensAsync(int userId)
         {
             var accessToken = await TokenHelper.GenerateAccessToken(userId);
             var refreshToken = await TokenHelper.GenerateRefreshToken();
@@ -95,7 +95,7 @@ namespace DenaAPI.Services
                 response.ErrorCode = "invalid_grant";
                 return response;
             }
-          
+
             if (refreshToken.ExpiryDate < DateTime.Now)
             {
                 response.Success = false;
