@@ -57,7 +57,7 @@ namespace DenaAPI
             {
                 entity.HasOne(d => d.Intermediate)
                     .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.Intermediate)
+                    .HasForeignKey(d => d.IntermediateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Product_Intermediate");
                 entity.ToTable("Product");
@@ -68,7 +68,7 @@ namespace DenaAPI
             {
                 entity.HasOne(d => d.Intermediate)
                     .WithMany(p => p.Attributes)
-                    .HasForeignKey(d => d.Intermediate)
+                    .HasForeignKey(d => d.IntermediateId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Attribute_Intermediate");
                 entity.ToTable("Attribute");
