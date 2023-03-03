@@ -66,6 +66,7 @@ if (app.Environment.IsDevelopment())
 /*omit after publish completely*/
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 

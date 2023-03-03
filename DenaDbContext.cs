@@ -16,6 +16,7 @@ namespace DenaAPI
         public DenaDbContext(DbContextOptions<DenaDbContext> options)
             : base(options)
         {
+
         }
 
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
