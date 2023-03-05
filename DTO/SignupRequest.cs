@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DenaAPI.Requests
+namespace DenaAPI.DTO
 {
     public class SignupRequest
     {

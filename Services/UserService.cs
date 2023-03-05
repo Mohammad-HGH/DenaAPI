@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DenaAPI.Helpers;
 using DenaAPI.Interfaces;
-using DenaAPI.Requests;
+using DenaAPI.DTO;
 using DenaAPI.Responses;
 
 namespace DenaAPI.Services

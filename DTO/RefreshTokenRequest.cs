@@ -1,4 +1,4 @@
-﻿namespace DenaAPI.Requests
+﻿namespace DenaAPI.DTO
 {
     public class RefreshTokenRequest
     {
