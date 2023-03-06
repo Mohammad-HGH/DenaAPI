@@ -6,6 +6,7 @@ using DenaAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 
+
 namespace DenaAPI
 {
     public partial class DenaDbContext : DbContext
@@ -24,9 +25,15 @@ namespace DenaAPI
 
         public virtual DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Verification> Verifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Verification>(entity =>
+            {
+                entity.Property(e => e.Phone).IsFixedLength();
+            });
+
             modelBuilder.Entity<RefreshToken>(entity =>
             {
 

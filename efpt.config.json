@@ -15,15 +15,7 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "[dbo].[Attribute]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Intermediate]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Product]",
+         "Name": "[dbo].[Verification]",
          "ObjectType": 0
       }
    ],
