@@ -26,6 +26,9 @@ namespace DenaAPI
         public virtual DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public virtual DbSet<Sms> Sms { get; set; }
+        public virtual DbSet<Intermediate> Intermediates { get; set; }
+        public virtual DbSet<Models.Attribute> Attributes { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,7 +42,48 @@ namespace DenaAPI
                     .HasConstraintName("FK_Sms_User");
                 entity.ToTable("Sms");
             });
+            modelBuilder.Entity<Product>(entity =>
+            {
+                entity.ToTable("Product");
 
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
+
+            modelBuilder.Entity<Models.Attribute>(entity =>
+            {
+                entity.ToTable("Attribute");
+
+                entity.Property(e => e.Brand)
+                    .IsRequired()
+                    .HasMaxLength(50);
+                entity.Property(e => e.Color)
+                    .IsRequired()
+                    .HasMaxLength(50);
+                entity.Property(e => e.Size)
+                    .IsRequired()
+                    .HasMaxLength(50);
+                entity.Property(e => e.Type)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Intermediate>(entity =>
+            {
+                entity.ToTable("Intermediate");
+
+                entity.HasOne(d => d.Attribute).WithMany(p => p.Intermediates)
+                    .HasForeignKey(d => d.AttributeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Intermediate_Attribute");
+
+                entity.HasOne(d => d.Product).WithMany(p => p.Intermediates)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Intermediate_Product");
+            });
             modelBuilder.Entity<RefreshToken>(entity =>
             {
 
