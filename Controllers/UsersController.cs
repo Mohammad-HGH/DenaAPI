@@ -28,9 +28,9 @@ namespace DenaAPI.Controllers
 
         [HttpPut]
         [Route("update")]
-        public async Task<IActionResult> PutUser([FromForm] User user)
+        public async Task<IActionResult> PutUser([FromForm] UpdateRequest updateRequest)
         {
-            var updateResponse = await userService.UpdateAsync(user);
+            var updateResponse = await userService.UpdateAsync(updateRequest);
 
             if (!updateResponse.Success)
             {

@@ -10,6 +10,6 @@ namespace DenaAPI.Interfaces
         Task<SignupResponse> SignupAsync(SignupRequest signupRequest);
         Task<LogoutResponse> LogoutAsync(int userId);
         Task<UserResponse> GetInfoAsync(int userId);
-        Task<UpdateResponse> UpdateAsync(User user);
+        Task<UpdateResponse> UpdateAsync(UpdateRequest updateRequest);
     }
 }

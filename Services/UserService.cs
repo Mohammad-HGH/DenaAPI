@@ -5,6 +5,7 @@ using DenaAPI.DTO;
 using DenaAPI.Responses;
 using DenaAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Plugins;
 
 namespace DenaAPI.Services
 {
@@ -167,13 +168,48 @@ namespace DenaAPI.Services
             };
         }
 
-        public async Task<UpdateResponse> UpdateAsync(User user)
+        public async Task<UpdateResponse> UpdateAsync(UpdateRequest updateRequest)
         {
+
+            if (updateRequest.Password != updateRequest.ConfirmPassword)
+            {
+                return new UpdateResponse
+                {
+                    Success = false,
+                    Error = "Password and confirm password do not match",
+                    ErrorCode = "S03"
+                };
+            }
+
+            if (updateRequest.Password.Length <= 7) // This can be more complicated than only length, you can check on alphanumeric and or special characters
+            {
+                return new UpdateResponse
+                {
+                    Success = false,
+                    Error = "Password is weak",
+                    ErrorCode = "S04"
+                };
+            }
+            var salt = PasswordHelper.GetSecureSalt();
+            var passwordHash = PasswordHelper.HashUsingPbkdf2(updateRequest.Password, salt);
+
+            var user = new User
+            {
+                Id = updateRequest.Id,
+                Email = updateRequest.Email,
+                Password = passwordHash,
+                PasswordSalt = Convert.ToBase64String(salt),
+                FirstName = updateRequest.FirstName,
+                LastName = updateRequest.LastName,
+                Ts = DateTime.Now,
+                Active = true // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true
+            };
+
             denaDbContext.Entry(user).State = EntityState.Modified;
             try { await denaDbContext.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(user.Id))
+                if (!UserExists(updateRequest.Id))
                 {
                     return new UpdateResponse
                     {
