@@ -85,7 +85,7 @@ namespace DenaAPI.Services
             var sms = new Sms
             {
                 Phone = smsRequest.Phone,
-                SmsId = smsRequest.VerficationId,
+                SmsId = int.Parse(smsCode),
                 UserId = smsRequest.UserId,
                 TS = DateTime.Now,
             };
