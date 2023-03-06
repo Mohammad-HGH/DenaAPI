@@ -18,6 +18,6 @@ namespace DenaAPI.Models
         public DateTime Ts { get; set; }
         public bool Active { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
-
+        public virtual ICollection<Sms> Sms { get; set; }
     }
 }

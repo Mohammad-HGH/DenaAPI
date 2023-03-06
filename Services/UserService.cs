@@ -4,8 +4,7 @@ using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 using DenaAPI.Responses;
 using DenaAPI.Models;
-using Microsoft.AspNetCore.Mvc;
-using NuGet.Protocol.Plugins;
+
 
 namespace DenaAPI.Services
 {

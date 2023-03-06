@@ -15,7 +15,7 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
-         "Name": "[dbo].[Verification]",
+         "Name": "[dbo].[Sms]",
          "ObjectType": 0
       }
    ],

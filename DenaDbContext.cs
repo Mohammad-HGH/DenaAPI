@@ -25,13 +25,19 @@ namespace DenaAPI
 
         public virtual DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Verification> Verifications { get; set; }
+        public virtual DbSet<Sms> Sms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Verification>(entity =>
+            modelBuilder.Entity<Sms>(entity =>
             {
                 entity.Property(e => e.Phone).IsFixedLength();
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Sms)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Sms_User");
+                entity.ToTable("Sms");
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>

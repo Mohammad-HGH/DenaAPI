@@ -8,19 +8,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DenaAPI.Models;
 
-[Table("Verification")]
-public partial class Verification
+[Table("Sms")]
+public partial class Sms
 {
     [Key]
     public int Id { get; set; }
+    public int UserId { get; set; }
 
     [StringLength(15)]
     public string Phone { get; set; }
 
-    public int? VerificationId { get; set; }
+    public int SmsId { get; set; }
 
     [Column(TypeName = "smalldatetime")]
-    public DateTime? TS { get; set; }
+    public DateTime TS { get; set; }
 
-    public int? UserId { get; set; }
+    public virtual User User { get; set; }
 }
