@@ -1,4 +1,5 @@
 ﻿using DenaAPI.DTO;
+using DenaAPI.Models;
 using DenaAPI.Responses;
 
 namespace DenaAPI.Interfaces
@@ -9,5 +10,6 @@ namespace DenaAPI.Interfaces
         Task<SignupResponse> SignupAsync(SignupRequest signupRequest);
         Task<LogoutResponse> LogoutAsync(int userId);
         Task<UserResponse> GetInfoAsync(int userId);
+        Task<UpdateResponse> UpdateAsync(int id, User user);
     }
 }

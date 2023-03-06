@@ -4,6 +4,7 @@ using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 using DenaAPI.Responses;
 using DenaAPI.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DenaAPI.Services
 {
@@ -164,6 +165,48 @@ namespace DenaAPI.Services
                 Error = "Unable to save the user",
                 ErrorCode = "S05"
             };
+        }
+
+        public async Task<UpdateResponse> UpdateAsync(int id, User user)
+        {
+            if (id != user.Id)
+            {
+                return new UpdateResponse
+                {
+                    Success = false,
+                    Error = "Bad req",
+                    ErrorCode = "S02"
+                };
+            }
+
+            denaDbContext.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await denaDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UserExists(id))
+                {
+                    return new UpdateResponse
+                    {
+                        Success = false,
+                        Error = "Not found",
+                        ErrorCode = "S02"
+                    };
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return new UpdateResponse { Success = true, Error = "User updated", ErrorCode = "S02" };
+        }
+        private bool UserExists(int id)
+        {
+            return (denaDbContext.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

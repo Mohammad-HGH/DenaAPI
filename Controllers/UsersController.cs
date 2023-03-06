@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Security.Claims;
+using DenaAPI.Models;
+using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 
 namespace DenaAPI.Controllers
 {
@@ -21,6 +24,26 @@ namespace DenaAPI.Controllers
         {
             this.userService = userService;
             this.tokenService = tokenService;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutUser(int id, [FromForm] User user)
+        {
+            if (id != user.Id)
+            {
+                return BadRequest();
+            }
+            var updateResponse = await userService.UpdateAsync(id, user);
+
+            if (!updateResponse.Success)
+            {
+                return Unauthorized(new
+                {
+                    updateResponse.ErrorCode,
+                    updateResponse.Error
+                });
+            }
+            return Ok(updateResponse);
         }
 
         [HttpPost]

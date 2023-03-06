@@ -1,6 +1,6 @@
 ﻿namespace DenaAPI.Responses
 {
-    public class UpdateProfileResponse : BaseResponse
+    public class UpdateResponse : BaseResponse
     {
         public string? Email { get; set; }
     }
