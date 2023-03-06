@@ -7,11 +7,9 @@ using SmsIrRestful;
 
 namespace DenaAPI.Services
 {
-
     public class SmsService : ISmsService
     {
         private readonly DenaDbContext denaDbContext;
-
         private readonly String secretKey = "kjsfdhdsfBVJHG@#";
         private readonly String userApiKey = "4998f2cd6704ff5c5b8ce076";
 
@@ -80,33 +78,39 @@ namespace DenaAPI.Services
                 };
             }
             MessageSendResponseObject messageSendResponseObject = new MessageSend().Send(token, messageSendObject);
-
-
-            var sms = new Sms
+            if (messageSendResponseObject.IsSuccessful)
             {
-                Phone = smsRequest.Phone,
-                SmsId = int.Parse(smsCode),
-                UserId = smsRequest.UserId,
-                TS = DateTime.Now,
-            };
-            denaDbContext.Sms.Add(sms);
+                var sms = new Sms
+                {
+                    Phone = smsRequest.Phone,
+                    SmsId = int.Parse(smsCode),
+                    UserId = smsRequest.UserId,
+                    TS = DateTime.Now,
+                };
+                denaDbContext.Sms.Add(sms);
 
-            var saveResponse = await denaDbContext.SaveChangesAsync();
+                var saveResponse = await denaDbContext.SaveChangesAsync();
 
-            if (saveResponse >= 0)
-            {
-                return new SmsResponse { Success = true, Phone = sms.Phone };
+                if (saveResponse >= 0)
+                {
+                    return new SmsResponse { Success = true, Phone = sms.Phone };
+                }
+
+                return new SmsResponse
+                {
+                    Error = "ok",
+                    ErrorCode = "200",
+                    Success = true,
+                };
             }
-
-            return new SmsResponse
+            else
             {
-                Error = "ok",
-                ErrorCode = "200",
-                Success = true,
-            };
-
-
-
+                return new SmsResponse
+                {
+                    Success = false,
+                    Message = "Sms not sent!"
+                };
+            }
         }
     }
 }
