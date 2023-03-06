@@ -10,8 +10,8 @@ namespace DenaAPI.Services
     public class SmsService : ISmsService
     {
         private readonly DenaDbContext denaDbContext;
-        private readonly String secretKey = "kjsfdhdsfBVJHG@#";
-        private readonly String userApiKey = "4998f2cd6704ff5c5b8ce076";
+        private readonly string secretKey = "kjsfdhdsfBVJHG@#";
+        private readonly string userApiKey = "4998f2cd6704ff5c5b8ce076";
 
 
 
