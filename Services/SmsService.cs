@@ -3,18 +3,26 @@ using DenaAPI.Interfaces;
 using DenaAPI.Models;
 using DenaAPI.Responses;
 using Microsoft.EntityFrameworkCore;
+using SmsIrRestful;
 
 namespace DenaAPI.Services
 {
+
     public class SmsService : ISmsService
     {
         private readonly DenaDbContext denaDbContext;
 
+        private readonly String secretKey = "kjsfdhdsfBVJHG@#";
+        private readonly String userApiKey = "4998f2cd6704ff5c5b8ce076";
 
-        public SmsService(DenaDbContext denaDbContext, ITokenService tokenService)
+
+
+        public SmsService(DenaDbContext denaDbContext)
         {
             this.denaDbContext = denaDbContext;
         }
+
+
         public async Task<SmsResponse> GetSmsAsync(int smsId)
         {
             if (denaDbContext.Sms == null)
@@ -51,7 +59,17 @@ namespace DenaAPI.Services
         public async Task<SmsResponse> CreateSmsAsync(SmsRequest smsRequest)
         {
             var existingPhone = await denaDbContext.Sms.SingleOrDefaultAsync(sms => sms.Phone == smsRequest.Phone);
-
+            Random generator = new();
+            string smsCode = generator.Next(0, 1000000).ToString("D6");
+            var token = new Token().GetToken(userApiKey, secretKey);
+            var messageSendObject = new MessageSendObject()
+            {
+                Messages = new List<string> { $"بترکی!! این دفه منم با کد تایید!! {smsCode}" }.ToArray(),
+                MobileNumbers = new List<string> { smsRequest.Phone }.ToArray(),
+                LineNumber = "300070797197",
+                SendDateTime = null,
+                CanContinueInCaseOfError = true
+            };
             if (existingPhone != null)
             {
                 return new SmsResponse
@@ -61,6 +79,8 @@ namespace DenaAPI.Services
                     ErrorCode = "S02"
                 };
             }
+            MessageSendResponseObject messageSendResponseObject = new MessageSend().Send(token, messageSendObject);
+
 
             var sms = new Sms
             {
