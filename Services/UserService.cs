@@ -167,27 +167,13 @@ namespace DenaAPI.Services
             };
         }
 
-        public async Task<UpdateResponse> UpdateAsync(int id, User user)
+        public async Task<UpdateResponse> UpdateAsync(User user)
         {
-            if (id != user.Id)
-            {
-                return new UpdateResponse
-                {
-                    Success = false,
-                    Error = "Bad req",
-                    ErrorCode = "S02"
-                };
-            }
-
             denaDbContext.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await denaDbContext.SaveChangesAsync();
-            }
+            try { await denaDbContext.SaveChangesAsync(); }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!UserExists(user.Id))
                 {
                     return new UpdateResponse
                     {
@@ -196,10 +182,7 @@ namespace DenaAPI.Services
                         ErrorCode = "S02"
                     };
                 }
-                else
-                {
-                    throw;
-                }
+                else throw;
             }
 
             return new UpdateResponse { Success = true, Error = "User updated", ErrorCode = "S02" };

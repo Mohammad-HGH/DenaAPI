@@ -26,21 +26,19 @@ namespace DenaAPI.Controllers
             this.tokenService = tokenService;
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, [FromForm] User user)
+        [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> PutUser([FromForm] User user)
         {
-            if (id != user.Id)
-            {
-                return BadRequest();
-            }
-            var updateResponse = await userService.UpdateAsync(id, user);
+            var updateResponse = await userService.UpdateAsync(user);
 
             if (!updateResponse.Success)
             {
-                return Unauthorized(new
+                return BadRequest(new
                 {
-                    updateResponse.ErrorCode,
-                    updateResponse.Error
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
                 });
             }
             return Ok(updateResponse);

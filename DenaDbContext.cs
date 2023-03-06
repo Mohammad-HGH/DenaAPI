@@ -4,7 +4,7 @@
 
 using DenaAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using DenaAPI.DTO;
+
 
 namespace DenaAPI
 {
@@ -91,6 +91,6 @@ namespace DenaAPI
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
-        public DbSet<DenaAPI.DTO.UpdateRequest> UpdateRequest { get; set; } = default!;
+
     }
 }
