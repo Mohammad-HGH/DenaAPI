@@ -2,7 +2,7 @@
 #nullable disable
 
 
-using DenaAPI.Entities;
+using DenaAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DenaAPI
@@ -22,10 +22,7 @@ namespace DenaAPI
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public virtual DbSet<User> Users { get; set; }
-        public DbSet<Category> Category { get; set; }
-        public DbSet<Intermediate> Intermediate { get; set; }
-        public DbSet<Entities.Attribute> Attributes { get; set; }
-        public DbSet<Product> yProducts { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,26 +51,8 @@ namespace DenaAPI
                 entity.ToTable("RefreshToken");
             });
 
-            modelBuilder.Entity<Product>(entity =>
-            {
-                entity.HasOne(d => d.Intermediate)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.IntermediateId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Product_Intermediate");
-                entity.ToTable("Product");
-            });
 
 
-            modelBuilder.Entity<Entities.Attribute>(entity =>
-            {
-                entity.HasOne(d => d.Intermediate)
-                    .WithMany(p => p.Attributes)
-                    .HasForeignKey(d => d.IntermediateId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Attribute_Intermediate");
-                entity.ToTable("Attribute");
-            });
 
 
             modelBuilder.Entity<User>(entity =>

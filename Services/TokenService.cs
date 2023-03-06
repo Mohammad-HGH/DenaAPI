@@ -3,17 +3,18 @@ using DenaAPI.Helpers;
 using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 using DenaAPI.Responses;
+using DenaAPI.Models;
 
 namespace DenaAPI.Services
 {
     public class TokenService : ITokenService
     {
 
-        private readonly DenaDbContext tasksDbContext;
+        private readonly DenaDbContext denaDbContext;
 
-        public TokenService(DenaDbContext tasksDbContext)
+        public TokenService(DenaDbContext denaDbContext)
         {
-            this.tasksDbContext = tasksDbContext;
+            this.denaDbContext = denaDbContext;
         }
 
         public async Task<Tuple<string, string>?> GenerateTokensAsync(int userId)
@@ -21,7 +22,7 @@ namespace DenaAPI.Services
             var accessToken = await TokenHelper.GenerateAccessToken(userId);
             var refreshToken = await TokenHelper.GenerateRefreshToken();
 
-            var userRecord = await tasksDbContext.Users.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.Id == userId);
+            var userRecord = await denaDbContext.Users.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.Id == userId);
 
             if (userRecord == null)
             {
@@ -47,7 +48,7 @@ namespace DenaAPI.Services
 
             });
 
-            await tasksDbContext.SaveChangesAsync();
+            await denaDbContext.SaveChangesAsync();
 
             var token = new Tuple<string, string>(accessToken, refreshToken);
 
@@ -56,7 +57,7 @@ namespace DenaAPI.Services
 
         public async Task<bool> RemoveRefreshTokenAsync(User user)
         {
-            var userRecord = await tasksDbContext.Users.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.Id == user.Id);
+            var userRecord = await denaDbContext.Users.Include(o => o.RefreshTokens).FirstOrDefaultAsync(e => e.Id == user.Id);
 
             if (userRecord == null)
             {
@@ -67,7 +68,7 @@ namespace DenaAPI.Services
             {
                 var currentRefreshToken = userRecord.RefreshTokens.First();
 
-                tasksDbContext.RefreshTokens.Remove(currentRefreshToken);
+                denaDbContext.RefreshTokens.Remove(currentRefreshToken);
             }
 
             return false;
@@ -75,7 +76,7 @@ namespace DenaAPI.Services
 
         public async Task<ValidateRefreshTokenResponse> ValidateRefreshTokenAsync(RefreshTokenRequest refreshTokenRequest)
         {
-            var refreshToken = await tasksDbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == refreshTokenRequest.UserId);
+            var refreshToken = await denaDbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == refreshTokenRequest.UserId);
 
             var response = new ValidateRefreshTokenResponse();
             if (refreshToken == null)

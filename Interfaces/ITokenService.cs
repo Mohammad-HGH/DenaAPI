@@ -1,4 +1,5 @@
 ﻿using DenaAPI.DTO;
+using DenaAPI.Models;
 using DenaAPI.Responses;
 
 namespace DenaAPI.Interfaces

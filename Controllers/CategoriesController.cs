@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DenaAPI;
-using DenaAPI.Entities;
+using DenaAPI.Models;
 
 namespace DenaAPI.Controllers
 {
@@ -14,42 +8,42 @@ namespace DenaAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly DenaDbContext _context;
+        private readonly DenaDbContext denaDbContext;
 
         public CategoriesController(DenaDbContext context)
         {
-            _context = context;
+            denaDbContext = context;
         }
 
         // GET: api/Categories
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
         {
-            if (_context.Category == null)
+            if (denaDbContext.Categories == null)
             {
                 return NotFound();
             }
-            return await _context.Category.ToListAsync();
+            return await denaDbContext.Categories.ToListAsync();
         }
         [HttpGet("{parentid},{isparent}")]
         public async Task<ActionResult<IEnumerable<Category>>> GetChildren(int parentid, bool isparent = true)
         {
-            if (_context.Category == null)
+            if (denaDbContext.Categories == null)
             {
                 return NotFound();
             }
-            return await _context.Category.Where(c => c.ParentId == parentid).ToListAsync();
+            return await denaDbContext.Categories.Where(c => c.ParentId == parentid).ToListAsync();
         }
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Category>> GetCategory(int id)
         {
-            if (_context.Category == null)
+            if (denaDbContext.Categories == null)
             {
                 return NotFound();
             }
-            var category = await _context.Category.FindAsync(id);
+            var category = await denaDbContext.Categories.FindAsync(id);
 
             if (category == null)
             {
@@ -69,11 +63,11 @@ namespace DenaAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(category).State = EntityState.Modified;
+            denaDbContext.Entry(category).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await denaDbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -95,12 +89,12 @@ namespace DenaAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory(Category category)
         {
-            if (_context.Category == null)
+            if (denaDbContext.Categories == null)
             {
                 return Problem("Entity set 'DenaDbContext.Category'  is null.");
             }
-            _context.Category.Add(category);
-            await _context.SaveChangesAsync();
+            denaDbContext.Categories.Add(category);
+            await denaDbContext.SaveChangesAsync();
 
             return CreatedAtAction("GetCategory", new { id = category.Id }, category);
         }
@@ -109,25 +103,25 @@ namespace DenaAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            if (_context.Category == null)
+            if (denaDbContext.Categories == null)
             {
                 return NotFound();
             }
-            var category = await _context.Category.FindAsync(id);
+            var category = await denaDbContext.Categories.FindAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
 
-            _context.Category.Remove(category);
-            await _context.SaveChangesAsync();
+            denaDbContext.Categories.Remove(category);
+            await denaDbContext.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool CategoryExists(int id)
         {
-            return (_context.Category?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (denaDbContext.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

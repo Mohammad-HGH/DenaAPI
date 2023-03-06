@@ -3,23 +3,24 @@ using DenaAPI.Helpers;
 using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 using DenaAPI.Responses;
+using DenaAPI.Models;
 
 namespace DenaAPI.Services
 {
     public class UserService : IUserService
     {
-        private readonly DenaDbContext tasksDbContext;
+        private readonly DenaDbContext denaDbContext;
         private readonly ITokenService tokenService;
 
-        public UserService(DenaDbContext tasksDbContext, ITokenService tokenService)
+        public UserService(DenaDbContext denaDbContext, ITokenService tokenService)
         {
-            this.tasksDbContext = tasksDbContext;
+            this.denaDbContext = denaDbContext;
             this.tokenService = tokenService;
         }
 
         public async Task<UserResponse> GetInfoAsync(int userId)
         {
-            var user = await tasksDbContext.Users.FindAsync(userId);
+            var user = await denaDbContext.Users.FindAsync(userId);
 
             if (user == null)
             {
@@ -43,7 +44,7 @@ namespace DenaAPI.Services
 
         public async Task<TokenResponse> LoginAsync(LoginRequest loginRequest)
         {
-            var user = tasksDbContext.Users.SingleOrDefault(user => user.Active && user.Email == loginRequest.Email);
+            var user = denaDbContext.Users.SingleOrDefault(user => user.Active && user.Email == loginRequest.Email);
 
             if (user == null)
             {
@@ -80,16 +81,16 @@ namespace DenaAPI.Services
 
         public async Task<LogoutResponse> LogoutAsync(int userId)
         {
-            var refreshToken = await tasksDbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == userId);
+            var refreshToken = await denaDbContext.RefreshTokens.FirstOrDefaultAsync(o => o.UserId == userId);
 
             if (refreshToken == null)
             {
                 return new LogoutResponse { Success = true };
             }
 
-            tasksDbContext.RefreshTokens.Remove(refreshToken);
+            denaDbContext.RefreshTokens.Remove(refreshToken);
 
-            var saveResponse = await tasksDbContext.SaveChangesAsync();
+            var saveResponse = await denaDbContext.SaveChangesAsync();
 
             if (saveResponse >= 0)
             {
@@ -102,7 +103,7 @@ namespace DenaAPI.Services
 
         public async Task<SignupResponse> SignupAsync(SignupRequest signupRequest)
         {
-            var existingUser = await tasksDbContext.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
+            var existingUser = await denaDbContext.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
 
             if (existingUser != null)
             {
@@ -148,9 +149,9 @@ namespace DenaAPI.Services
                 Active = true // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true
             };
 
-            await tasksDbContext.Users.AddAsync(user);
+            await denaDbContext.Users.AddAsync(user);
 
-            var saveResponse = await tasksDbContext.SaveChangesAsync();
+            var saveResponse = await denaDbContext.SaveChangesAsync();
 
             if (saveResponse >= 0)
             {
@@ -163,7 +164,6 @@ namespace DenaAPI.Services
                 Error = "Unable to save the user",
                 ErrorCode = "S05"
             };
-
         }
     }
 }
