@@ -45,7 +45,7 @@ namespace DenaAPI.Controllers
                     });
                 }
             }
-            var smsResponse = await smsService.CreateSmsAsync(createSmsRequest);
+            var smsResponse = await smsService.SmsVerifyAsync(createSmsRequest);
             if (!smsResponse.Success)
             {
                 return UnprocessableEntity(smsResponse);

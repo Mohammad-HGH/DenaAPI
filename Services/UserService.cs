@@ -4,7 +4,8 @@ using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 using DenaAPI.Responses;
 using DenaAPI.Models;
-
+using SmsIrRestful;
+using System.Reflection.Emit;
 
 namespace DenaAPI.Services
 {
@@ -12,6 +13,9 @@ namespace DenaAPI.Services
     {
         private readonly DenaDbContext denaDbContext;
         private readonly ITokenService tokenService;
+        private readonly string secretKey = "kjsfdhdsfBVJHG@#";
+        private readonly string userApiKey = "4998f2cd6704ff5c5b8ce076";
+        Random generator = new();
 
         public UserService(DenaDbContext denaDbContext, ITokenService tokenService)
         {
@@ -46,18 +50,30 @@ namespace DenaAPI.Services
         public async Task<TokenResponse> LoginAsync(LoginRequest loginRequest)
         {
             var user = denaDbContext.Users.SingleOrDefault(user => user.Active && user.Phone == loginRequest.Phone);
+            string smsCode = generator.Next(0, 1000000).ToString("D6");
+            var tokenSms = new Token().GetToken(userApiKey, secretKey);
+            var messageSendObject = new MessageSendObject()
+            {
+                Messages = new List<string> { $"بترکی!! این دفه منم با کد تایید!! {smsCode}" }.ToArray(),
+                MobileNumbers = new List<string> { loginRequest.Phone }.ToArray(),
+                LineNumber = "300070797197",
+                SendDateTime = null,
+                CanContinueInCaseOfError = true
+            };
+
+
+
 
             if (user == null)
             {
                 return new TokenResponse
                 {
                     Success = false,
-                    Error = "Email not found",
+                    Error = "Phone not found",
                     ErrorCode = "L02"
                 };
             }
             var passwordHash = PasswordHelper.HashUsingPbkdf2(loginRequest.Password, Convert.FromBase64String(user.PasswordSalt));
-
             if (user.Password != passwordHash)
             {
                 return new TokenResponse
@@ -68,16 +84,39 @@ namespace DenaAPI.Services
                 };
             }
 
-            var token = await System.Threading.Tasks.Task.Run(() => tokenService.GenerateTokensAsync(user.Id));
+            var token = await Task.Run(() => tokenService.GenerateTokensAsync(user.Id));
+            MessageSendResponseObject messageSendResponseObject = new MessageSend().Send(tokenSms, messageSendObject);
 
-            return new TokenResponse
+            if (messageSendResponseObject.IsSuccessful)
             {
-                Success = true,
-                AccessToken = token.Item1,
-                RefreshToken = token.Item2,
-                UserId = user.Id,
-                FirstName = user.FirstName
-            };
+                var sms = new Sms
+                {
+                    Phone = loginRequest.Phone,
+                    SmsId = int.Parse(smsCode),
+                    UserId = user.Id,
+                    TS = DateTime.Now,
+                };
+                denaDbContext.Sms.Add(sms);
+                var saveResponse = await denaDbContext.SaveChangesAsync();
+                return new TokenResponse
+                {
+                    Success = true,
+                    AccessToken = token.Item1,
+                    RefreshToken = token.Item2,
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    Message = "Sms sent"
+                };
+            }
+            else
+            {
+                return new TokenResponse
+                {
+                    Success = false,
+                    Error = "msg not sent",
+                    ErrorCode = "L03"
+                };
+            }
         }
 
         public async Task<LogoutResponse> LogoutAsync(int userId)

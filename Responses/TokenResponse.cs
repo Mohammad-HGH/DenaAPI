@@ -10,6 +10,7 @@ namespace DenaAPI.Responses
         public int UserId { get; set; }
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string? FirstName { get; set; }
+        public string? Message { get; set; }
 
     }
 }

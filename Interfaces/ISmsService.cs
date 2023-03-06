@@ -7,6 +7,6 @@ namespace DenaAPI.Interfaces
     public interface ISmsService
     {
         Task<SmsResponse> GetSmsAsync(int smsId);
-        Task<SmsResponse> CreateSmsAsync(SmsRequest createSmsRequest);
+        Task<SmsResponse> SmsVerifyAsync(SmsRequest createSmsRequest);
     }
 }
