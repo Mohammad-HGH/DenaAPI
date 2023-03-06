@@ -36,7 +36,7 @@ namespace DenaAPI.Services
             return new UserResponse
             {
                 Success = true,
-                Email = user.Email,
+                Phone = user.Phone,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 CreationDate = user.Ts
@@ -45,7 +45,7 @@ namespace DenaAPI.Services
 
         public async Task<TokenResponse> LoginAsync(LoginRequest loginRequest)
         {
-            var user = denaDbContext.Users.SingleOrDefault(user => user.Active && user.Email == loginRequest.Email);
+            var user = denaDbContext.Users.SingleOrDefault(user => user.Active && user.Phone == loginRequest.Phone);
 
             if (user == null)
             {
@@ -104,7 +104,7 @@ namespace DenaAPI.Services
 
         public async Task<SignupResponse> SignupAsync(SignupRequest signupRequest)
         {
-            var existingUser = await denaDbContext.Users.SingleOrDefaultAsync(user => user.Email == signupRequest.Email);
+            var existingUser = await denaDbContext.Users.SingleOrDefaultAsync(user => user.Phone == signupRequest.Phone);
 
             if (existingUser != null)
             {
@@ -141,7 +141,7 @@ namespace DenaAPI.Services
 
             var user = new User
             {
-                Email = signupRequest.Email,
+                Phone = signupRequest.Phone,
                 Password = passwordHash,
                 PasswordSalt = Convert.ToBase64String(salt),
                 FirstName = signupRequest.FirstName,
@@ -156,7 +156,7 @@ namespace DenaAPI.Services
 
             if (saveResponse >= 0)
             {
-                return new SignupResponse { Success = true, Email = user.Email };
+                return new SignupResponse { Success = true, Phone = user.Phone };
             }
 
             return new SignupResponse
@@ -195,7 +195,7 @@ namespace DenaAPI.Services
             var user = new User
             {
                 Id = updateRequest.Id,
-                Email = updateRequest.Email,
+                Phone = updateRequest.Phone,
                 Password = passwordHash,
                 PasswordSalt = Convert.ToBase64String(salt),
                 FirstName = updateRequest.FirstName,

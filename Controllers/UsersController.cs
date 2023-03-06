@@ -48,7 +48,7 @@ namespace DenaAPI.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromForm] LoginRequest loginRequest)
         {
-            if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Email) || string.IsNullOrEmpty(loginRequest.Password))
+            if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Phone) || string.IsNullOrEmpty(loginRequest.Password))
             {
                 return BadRequest(new TokenResponse
                 {
@@ -122,7 +122,7 @@ namespace DenaAPI.Controllers
                 return UnprocessableEntity(signupResponse);
             }
 
-            return Ok(signupResponse.Email);
+            return Ok(signupResponse.Phone);
         }
 
         [Authorize]

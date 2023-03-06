@@ -71,7 +71,7 @@ namespace DenaAPI
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.Email)
+                entity.Property(e => e.Phone)
                     .IsRequired()
                     .HasMaxLength(50);
 
