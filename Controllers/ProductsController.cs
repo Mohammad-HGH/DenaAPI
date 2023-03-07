@@ -19,7 +19,7 @@ namespace DenaAPI.Controllers
         // GET: api/Products
         [HttpGet]
         [Route("ProductList")]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<IActionResult> GetProducts()
         {
             var getProductResponse = await productService.GetAllProdsAsync();
 
@@ -38,7 +38,7 @@ namespace DenaAPI.Controllers
         // GET: api/Products/5
         [HttpGet]
         [Route("ViewProductById")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<IActionResult> GetProduct(int id)
         {
             var getProductResponse = await productService.GetProdAsync(id);
 
@@ -81,7 +81,7 @@ namespace DenaAPI.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         [Route("CreateProduct")]
-        public async Task<ActionResult<Product>> PostProduct([FromForm] ProductRequest productRequest, [FromForm] AttributeRequest attributeRequest, [FromForm] long price)
+        public async Task<IActionResult> PostProduct([FromForm] ProductRequest productRequest, [FromForm] AttributeRequest attributeRequest, [FromForm] long price)
         {
             var getProductResponse = await productService.CreateProdAsync(productRequest, attributeRequest, price);
 
