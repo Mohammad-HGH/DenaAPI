@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Security.Claims;
-using DenaAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol.Plugins;
 
 namespace DenaAPI.Controllers
 {

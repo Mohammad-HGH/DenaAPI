@@ -1,6 +1,5 @@
 ﻿using DenaAPI.DTO;
 using DenaAPI.Interfaces;
-using DenaAPI.Models;
 using DenaAPI.Responses;
 using Microsoft.EntityFrameworkCore;
 

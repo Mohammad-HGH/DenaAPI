@@ -5,7 +5,6 @@ using DenaAPI.DTO;
 using DenaAPI.Responses;
 using DenaAPI.Models;
 using SmsIrRestful;
-using System.Reflection.Emit;
 
 namespace DenaAPI.Services
 {

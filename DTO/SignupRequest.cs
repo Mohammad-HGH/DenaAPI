@@ -1,5 +1,4 @@
-﻿using DenaAPI.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DenaAPI.DTO
 {

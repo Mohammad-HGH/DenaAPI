@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using DenaAPI.Models;
 using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 using DenaAPI.Responses;

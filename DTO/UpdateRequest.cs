@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace DenaAPI.DTO
+﻿namespace DenaAPI.DTO
 {
     public class UpdateRequest
     {
