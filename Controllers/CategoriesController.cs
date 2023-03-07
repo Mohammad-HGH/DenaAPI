@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DenaAPI.Models;
+using DenaAPI.Services;
+using DenaAPI.Interfaces;
+using DenaAPI.DTO;
 
 namespace DenaAPI.Controllers
 {
@@ -8,120 +11,129 @@ namespace DenaAPI.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly DenaDbContext denaDbContext;
+        private readonly ICategoryService categoryService;
 
-        public CategoriesController(DenaDbContext context)
+        public CategoriesController([FromForm] ICategoryService categoryService)
         {
-            denaDbContext = context;
+            this.categoryService = categoryService;
         }
+
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategory()
+        [Route("CategoriesList")]
+        public async Task<IActionResult> GetCategory()
         {
-            if (denaDbContext.Categories == null)
+            var getCatResponse = await categoryService.GetAllCatsAsync();
+
+            if (!getCatResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-            return await denaDbContext.Categories.ToListAsync();
+            return Ok(getCatResponse);
         }
-        [HttpGet("{parentid},{isparent}")]
-        public async Task<ActionResult<IEnumerable<Category>>> GetChildren(int parentid, bool isparent = true)
+
+        [HttpGet]
+        [Route("GetChildren")]
+        public async Task<IActionResult> GetChildren(int parendId, bool isparent = true)
         {
-            if (denaDbContext.Categories == null)
+            var getCatResponse = await categoryService.GetChildAsync(parendId);
+
+            if (!getCatResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-            return await denaDbContext.Categories.Where(c => c.ParentId == parentid).ToListAsync();
+            return Ok(getCatResponse);
         }
 
         // GET: api/Categories/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Category>> GetCategory(int id)
+        [HttpGet]
+        [Route("ViewCategoryById")]
+        public async Task<IActionResult> GetCategory(int id)
         {
-            if (denaDbContext.Categories == null)
-            {
-                return NotFound();
-            }
-            var category = await denaDbContext.Categories.FindAsync(id);
+            var getCatResponse = await categoryService.GetCatAsync(id);
 
-            if (category == null)
+            if (!getCatResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-
-            return category;
+            return Ok(getCatResponse);
         }
 
         // PUT: api/Categories/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        [HttpPut]
+        [Route("UpdateCategory")]
+        public async Task<IActionResult> PutCategory(int id, CategoryRequest categoryRequest)
         {
-            if (id != category.Id)
-            {
-                return BadRequest();
-            }
+            var getCatResponse = await categoryService.UpdateCatAsync(id, categoryRequest);
 
-            denaDbContext.Entry(category).State = EntityState.Modified;
-
-            try
+            if (!getCatResponse.Success)
             {
-                await denaDbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CategoryExists(id))
+                return BadRequest(new
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-
-            return NoContent();
+            return Ok(getCatResponse);
         }
 
         // POST: api/Categories
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category category)
+        [Route("CreateCategory")]
+        public async Task<IActionResult> PostCategory(CategoryRequest categoryRequest)
         {
-            if (denaDbContext.Categories == null)
-            {
-                return Problem("Entity set 'DenaDbContext.Category'  is null.");
-            }
-            denaDbContext.Categories.Add(category);
-            await denaDbContext.SaveChangesAsync();
+            var getCatResponse = await categoryService.CreateCatAsync(categoryRequest);
 
-            return CreatedAtAction("GetCategory", new { id = category.Id }, category);
+            if (!getCatResponse.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
+            }
+            return Ok(getCatResponse);
         }
 
         // DELETE: api/Categories/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("DeleteCategory")]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            if (denaDbContext.Categories == null)
-            {
-                return NotFound();
-            }
-            var category = await denaDbContext.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            var getCatResponse = await categoryService.DeleteCatAsync(id);
 
-            denaDbContext.Categories.Remove(category);
-            await denaDbContext.SaveChangesAsync();
-
-            return NoContent();
+            if (!getCatResponse.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
+            }
+            return Ok(getCatResponse);
         }
 
-        private bool CategoryExists(int id)
-        {
-            return (denaDbContext.Categories?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+        
     }
 }
