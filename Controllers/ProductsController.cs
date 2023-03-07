@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using DenaAPI.Models;
 using DenaAPI.DTO;
+using DenaAPI.Services;
+using DenaAPI.Interfaces;
 
 namespace DenaAPI.Controllers
 {
@@ -9,73 +11,94 @@ namespace DenaAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly DenaDbContext _context;
+        private readonly IProductService productService;
 
-        public ProductsController(DenaDbContext context)
+        public ProductsController([FromForm] IProductService productService)
         {
-            _context = context;
+            this.productService = productService;
         }
 
         // GET: api/Products
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            if (_context.Products == null)
+            var getProductResponse = await productService.GetAllProdsAsync();
+
+            if (!getProductResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-            return await _context.Products.ToListAsync();
+            return Ok(getProductResponse);
         }
 
         // GET: api/Products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            if (_context.Products == null)
-            {
-                return NotFound();
-            }
-            var product = await _context.Products.FindAsync(id);
+            var getProductResponse = await productService.GetProdAsync(id);
 
-            if (product == null)
+            if (!getProductResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-
-            return product;
+            return Ok(getProductResponse);
         }
 
         // PUT: api/Products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, ProductRequest product)
+        public async Task<IActionResult> PutProduct(int id, ProductRequest productRequest)
         {
-            var product1 = await _context.Products.FindAsync(id);
-            if (product1 == null)
-            {
-                return BadRequest();
-            }
 
-            product1.Name = product.Name;
-            product1.CatId = product.CatId;
+            var getProductResponse = await productService.UpdateProdAsync(id, productRequest);
 
-            try
+            if (!getProductResponse.Success)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ProductExists(id))
+                return BadRequest(new
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
+            return Ok(getProductResponse);
+            /* var product1 = await _context.Products.FindAsync(id);
+             if (product1 == null)
+             {
+                 return BadRequest();
+             }
 
-            return Ok();
+             product1.Name = product.Name;
+             product1.CatId = product.CatId;
+
+             try
+             {
+                 await _context.SaveChangesAsync();
+             }
+             catch (DbUpdateConcurrencyException)
+             {
+                 if (!ProductExists(id))
+                 {
+                     return NotFound();
+                 }
+                 else
+                 {
+                     throw;
+                 }
+             }
+
+             return Ok();*/
+
         }
 
         // POST: api/Products
@@ -83,7 +106,19 @@ namespace DenaAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromForm] ProductRequest productRequest, [FromForm] AttributeRequest attributeRequest, [FromForm] long price)
         {
-            var existingProduct = await _context.Products.SingleOrDefaultAsync(
+            var getProductResponse = await productService.CreateProdAsync(productRequest, attributeRequest, price);
+
+            if (!getProductResponse.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
+            }
+            return Ok(getProductResponse);
+            /*var existingProduct = await _context.Products.SingleOrDefaultAsync(
                 product => product.CatId == productRequest.CatId
                 && product.Name == productRequest.Name
                 );
@@ -144,7 +179,7 @@ namespace DenaAPI.Controllers
             };
             await _context.AddAsync(intermediate);
             await _context.SaveChangesAsync();
-            return Ok();
+            return Ok();*/
 
         }
 
@@ -152,31 +187,40 @@ namespace DenaAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            if (_context.Products == null)
-            {
-                return NotFound();
-            }
-            var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            var getProductResponse = await productService.DeleteProdAsync(id);
 
-            var DeleteInter = await _context.Intermediates.FirstOrDefaultAsync(x => x.ProductId == product.Id);
-            if (DeleteInter != null)
+            if (!getProductResponse.Success)
             {
-                _context.Intermediates.Remove(DeleteInter);
-                await _context.SaveChangesAsync();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            return Ok(getProductResponse);
+            /* if (_context.Products == null)
+             {
+                 return NotFound();
+             }
+             var product = await _context.Products.FindAsync(id);
+             if (product == null)
+             {
+                 return NotFound();
+             }
 
-            return Ok();
+             var DeleteInter = await _context.Intermediates.FirstOrDefaultAsync(x => x.ProductId == product.Id);
+             if (DeleteInter != null)
+             {
+                 _context.Intermediates.Remove(DeleteInter);
+                 await _context.SaveChangesAsync();
+             }
+             _context.Products.Remove(product);
+             await _context.SaveChangesAsync();
+
+             return Ok();*/
         }
 
-        private bool ProductExists(int id)
-        {
-            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+
     }
 }
