@@ -9,6 +9,6 @@ namespace DenaAPI.Interfaces
         Task<AttributeResponse> GetAttrAsync(int attrId);
         Task<AttributeResponse> DeleteAttrAsync(int attrId);
         Task<AttributeResponse> CreateAttrAsync(AttributeRequest attributeRequest);
-        Task<AttributeResponse> UpdateAttrAsync(AttributeRequest attributeRequest);
+        Task<AttributeResponse> UpdateAttrAsync(int id, AttributeRequest attributeRequest);
     }
 }

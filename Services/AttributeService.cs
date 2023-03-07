@@ -128,11 +128,11 @@ namespace DenaAPI.Services
                 Message = "Attribute saved!"
             };
         }
-        public async Task<AttributeResponse> UpdateAttrAsync(AttributeRequest attributeRequest)
+        public async Task<AttributeResponse> UpdateAttrAsync(int id, AttributeRequest attributeRequest)
         {
-            var attribute1 = await denaDbContext.Attributes.FirstOrDefaultAsync(x => x.Id == attributeRequest.Id);
+            var existingAttribute1 = await denaDbContext.Attributes.FindAsync(id);
 
-            if (attribute1 == null)
+            if (existingAttribute1 == null)
             {
                 return new AttributeResponse
                 {
@@ -142,10 +142,10 @@ namespace DenaAPI.Services
                 };
             }
 
-            attribute1.Brand = attributeRequest.Brand;
-            attribute1.Color = attributeRequest.Color;
-            attribute1.Size = attributeRequest.Size;
-            attribute1.Type = attributeRequest.Type;
+            existingAttribute1.Brand = attributeRequest.Brand;
+            existingAttribute1.Color = attributeRequest.Color;
+            existingAttribute1.Size = attributeRequest.Size;
+            existingAttribute1.Type = attributeRequest.Type;
 
             try
             {
@@ -153,7 +153,7 @@ namespace DenaAPI.Services
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AttributeExists(attributeRequest.Id))
+                if (!AttributeExists(existingAttribute1.Id))
                 {
                     return new AttributeResponse
                     {

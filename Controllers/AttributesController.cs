@@ -19,6 +19,7 @@ namespace DenaAPI.Controllers
 
         // GET: api/Attributes
         [HttpGet]
+        [Route("ListAttributes")]
         public async Task<IActionResult> GetAttributes()
         {
             var getAttrResponse = await attributeService.GetAllAttrsAsync();
@@ -36,7 +37,8 @@ namespace DenaAPI.Controllers
         }
 
         // GET: api/Attributes/5
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("View1Attriute")]
         public async Task<IActionResult> GetAttribute([FromForm] int id)
         {
             var getAttrResponse = await attributeService.GetAttrAsync(id);
@@ -56,9 +58,10 @@ namespace DenaAPI.Controllers
         // PUT: api/Attributes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut]
-        public async Task<IActionResult> PutAttribute([FromForm] AttributeRequest attributeRequest)
+        [Route("UpdateAttriute")]
+        public async Task<IActionResult> PutAttribute([FromForm] int id, [FromForm] AttributeRequest attributeRequest)
         {
-            var getAttrResponse = await attributeService.UpdateAttrAsync(attributeRequest);
+            var getAttrResponse = await attributeService.UpdateAttrAsync(id, attributeRequest);
 
             if (!getAttrResponse.Success)
             {
@@ -75,6 +78,7 @@ namespace DenaAPI.Controllers
         // POST: api/Attributes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Route("AddAttribute")]
         public async Task<IActionResult> PostAttribute([FromForm] AttributeRequest attributeRequest)
         {
             var getAttrResponse = await attributeService.CreateAttrAsync(attributeRequest);
@@ -92,7 +96,8 @@ namespace DenaAPI.Controllers
         }
 
         // DELETE: api/Attributes/5
-        [HttpDelete("{id}")]
+        [HttpDelete]
+        [Route("DeleteAttribute")]
         public async Task<IActionResult> DeleteAttribute(int id)
         {
             var getAttrResponse = await attributeService.DeleteAttrAsync(id);
