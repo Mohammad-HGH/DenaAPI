@@ -38,7 +38,7 @@ namespace DenaAPI.Controllers
 
         // GET: api/Attributes/5
         [HttpGet]
-        [Route("View1Attriute")]
+        [Route("ViewAttriuteById")]
         public async Task<IActionResult> GetAttribute(int id)
         {
             var getAttrResponse = await attributeService.GetAttrAsync(id);

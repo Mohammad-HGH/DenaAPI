@@ -11,7 +11,8 @@ namespace DenaAPI.Controllers
     {
         private readonly ISmsService smsService;
         public SmsController([FromForm] ISmsService smsService) { this.smsService = smsService; }
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("GetUserSmsCode")]
         public async Task<IActionResult> GetSms(int id)
         {
             var getSmsResponse = await smsService.GetSmsAsync(id);
@@ -30,6 +31,7 @@ namespace DenaAPI.Controllers
 
 
         [HttpPost]
+        [Route("LoginValidate")]
         public async Task<IActionResult> PostSms([FromForm] SmsRequest createSmsRequest)
         {
             if (!ModelState.IsValid)
