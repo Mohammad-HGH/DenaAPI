@@ -3,6 +3,7 @@
     public class AttributeRequest
     {
 
+        public int Id { get; set; }
         public string Type { get; set; }
 
         public string Size { get; set; }

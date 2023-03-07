@@ -53,6 +53,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ISmsService, SmsService>();
+builder.Services.AddTransient<IAttributeService, AttributeService>();
 
 
 var app = builder.Build();

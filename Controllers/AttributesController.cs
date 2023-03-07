@@ -1,134 +1,114 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DenaAPI.DTO;
+using DenaAPI.Services;
+using DenaAPI.Interfaces;
 
 namespace DenaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AttributesController : ControllerBase
+    public class AttributesController : BaseApiController
     {
-        private readonly DenaDbContext _context;
+        private readonly IAttributeService attributeService;
 
-        public AttributesController(DenaDbContext context)
+        public AttributesController([FromForm] IAttributeService attributeService)
         {
-            _context = context;
+            this.attributeService = attributeService;
         }
 
         // GET: api/Attributes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Models.Attribute>>> GetAttributes()
+        public async Task<IActionResult> GetAttributes()
         {
-            if (_context.Attributes == null)
+            var getAttrResponse = await attributeService.GetAllAttrsAsync();
+
+            if (!getAttrResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-            return await _context.Attributes.ToListAsync();
+            return Ok(getAttrResponse);
         }
 
         // GET: api/Attributes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Models.Attribute>> GetAttribute(int id)
+        public async Task<IActionResult> GetAttribute([FromForm] int id)
         {
-            if (_context.Attributes == null)
-            {
-                return NotFound();
-            }
-            var attribute = await _context.Attributes.FindAsync(id);
+            var getAttrResponse = await attributeService.GetAttrAsync(id);
 
-            if (attribute == null)
+            if (!getAttrResponse.Success)
             {
-                return NotFound();
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
             }
-
-            return attribute;
+            return Ok(getAttrResponse);
         }
 
         // PUT: api/Attributes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAttribute(int id, AttributeRequest attribute)
+        [HttpPut]
+        public async Task<IActionResult> PutAttribute([FromForm] AttributeRequest attributeRequest)
         {
-            var attribute1 = await _context.Attributes.FirstOrDefaultAsync(x => x.Id == id);
+            var getAttrResponse = await attributeService.UpdateAttrAsync(attributeRequest);
 
-            if (attribute1 == null)
+            if (!getAttrResponse.Success)
             {
-                return BadRequest("User Not Found!");
-            }
-
-            attribute1.Brand = attribute.Brand;
-            attribute1.Color = attribute.Color;
-            attribute1.Size = attribute.Size;
-            attribute1.Type = attribute.Type;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AttributeExists(id))
+                return BadRequest(new
                 {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                    Success = false,
+                    Error = "Error!",
+                    ErrorCode = "500"
+                });
             }
-
-            return Ok();
+            return Ok(getAttrResponse);
         }
 
         // POST: api/Attributes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Models.Attribute>> PostAttribute([FromForm] AttributeRequest attribute)
+        public async Task<IActionResult> PostAttribute([FromForm] AttributeRequest attributeRequest)
         {
-            var Att = await _context.Attributes.SingleOrDefaultAsync(x => x.Type == attribute.Type &&
-                                                                          x.Size == attribute.Size &&
-                                                                          x.Color == attribute.Color &&
-                                                                          x.Brand == attribute.Brand);
-            if (Att == null)
+            var getAttrResponse = await attributeService.CreateAttrAsync(attributeRequest);
+
+            if (!getAttrResponse.Success)
             {
-                Models.Attribute attribute1 = new()
+                return BadRequest(new
                 {
-                    Brand = attribute.Brand,
-                    Color = attribute.Color,
-                    Size = attribute.Size,
-                    Type = attribute.Type
-                };
-                _context.Attributes.Add(attribute1);
-                await _context.SaveChangesAsync();
+                    Success = false,
+                    Error = "Attribute is Exist!",
+                    ErrorCode = "500"
+                });
             }
-            else
-                return BadRequest("Attribute is Exist!");
-            return Ok();
+            return Ok(getAttrResponse);
         }
 
         // DELETE: api/Attributes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAttribute(int id)
         {
-            if (_context.Attributes == null)
-            {
-                return NotFound();
-            }
-            var attribute = await _context.Attributes.FindAsync(id);
-            if (attribute == null)
-            {
-                return NotFound();
-            }
+            var getAttrResponse = await attributeService.DeleteAttrAsync(id);
 
-            _context.Attributes.Remove(attribute);
-            await _context.SaveChangesAsync();
-
-            return Ok();
+            if (!getAttrResponse.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Error = "Not found",
+                    ErrorCode = "S02"
+                });
+            }
+            return Ok(getAttrResponse);
         }
 
-        private bool AttributeExists(int id)
-        {
-            return (_context.Attributes?.Any(e => e.Id == id)).GetValueOrDefault();
-        }
+
     }
 }
