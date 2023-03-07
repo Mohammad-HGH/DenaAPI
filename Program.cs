@@ -55,6 +55,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ISmsService, SmsService>();
 builder.Services.AddTransient<IAttributeService, AttributeService>();
 builder.Services.AddTransient<IProductService, ProductService>();
+builder.Services.AddTransient<ICategoryService, CategoryService>();
 
 
 var app = builder.Build();
