@@ -8,23 +8,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DenaAPI.Models;
 
-[Index("UserId", Name = "IX_Sms_UserId")]
-public partial class Sms
+[Table("PostDetail")]
+public partial class PostDetail
 {
     [Key]
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    [StringLength(255)]
+    public string Recipientname { get; set; }
 
-    [StringLength(15)]
+    [StringLength(50)]
     public string Phone { get; set; }
 
-    public int SmsId { get; set; }
+    [StringLength(255)]
+    public string Address { get; set; }
 
-    [Column(TypeName = "smalldatetime")]
-    public DateTime TS { get; set; }
+    [StringLength(255)]
+    public string Considreations { get; set; }
 
-    [ForeignKey("UserId")]
-    [InverseProperty("Sms")]
-    public virtual User User { get; set; }
+    [InverseProperty("Post")]
+    public virtual ICollection<Factor> Factors { get; } = new List<Factor>();
 }

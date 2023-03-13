@@ -41,7 +41,7 @@ namespace DenaAPI.Services
             userRecord.RefreshTokens?.Add(new RefreshToken
             {
                 ExpiryDate = DateTime.Now.AddDays(14),
-                Ts = DateTime.Now,
+                TS = DateTime.Now,
                 UserId = userId,
                 TokenHash = refreshTokenHashed,
                 TokenSalt = Convert.ToBase64String(salt)

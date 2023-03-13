@@ -29,16 +29,40 @@ namespace DenaAPI
         public virtual DbSet<Intermediate> Intermediates { get; set; }
         public virtual DbSet<Models.Attribute> Attributes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Factor> Factors { get; set; }
+        public virtual DbSet<PostDetail> PostDetails { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Factor>(entity =>
+            {
+                entity.HasOne(d => d.Post).WithMany(p => p.Factors)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Factor_PostDetail");
+
+                entity.HasOne(d => d.Product).WithMany(p => p.Factors)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Factor_Product");
+
+                entity.HasOne(d => d.User).WithMany(p => p.Factors)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_Factor_User");
+            });
+            /*modelBuilder.Entity<PostDetail>(entity =>
+            {
+                entity.ToTable("Product");
+
+                entity.Property(e => e.Phone)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            });*/
             modelBuilder.Entity<Sms>(entity =>
             {
                 entity.Property(e => e.Phone).IsFixedLength();
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Sms)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Sms_User");
                 entity.ToTable("Sms");
             });
@@ -50,8 +74,6 @@ namespace DenaAPI
                     .IsRequired()
                     .HasMaxLength(50);
             });
-
-
             modelBuilder.Entity<Models.Attribute>(entity =>
             {
                 entity.ToTable("Attribute");
@@ -69,19 +91,18 @@ namespace DenaAPI
                     .IsRequired()
                     .HasMaxLength(50);
             });
-
             modelBuilder.Entity<Intermediate>(entity =>
             {
                 entity.ToTable("Intermediate");
 
                 entity.HasOne(d => d.Attribute).WithMany(p => p.Intermediates)
                     .HasForeignKey(d => d.AttributeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Intermediate_Attribute");
 
                 entity.HasOne(d => d.Product).WithMany(p => p.Intermediates)
                     .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_Intermediate_Product");
             });
             modelBuilder.Entity<RefreshToken>(entity =>
@@ -97,22 +118,17 @@ namespace DenaAPI
                     .IsRequired()
                     .HasMaxLength(1000);
 
-                entity.Property(e => e.Ts)
+                entity.Property(e => e.TS)
                     .HasColumnType("smalldatetime")
                     .HasColumnName("TS");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.RefreshTokens)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("FK_RefreshToken_User");
                 entity.ToTable("RefreshToken");
             });
-
-
-
-
-
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Phone)
@@ -135,14 +151,13 @@ namespace DenaAPI
                     .IsRequired()
                     .HasMaxLength(255);
 
-                entity.Property(e => e.Ts)
+                entity.Property(e => e.TS)
                     .HasColumnType("smalldatetime")
                     .HasColumnName("TS");
 
                 entity.ToTable("User");
 
             });
-
             OnModelCreatingPartial(modelBuilder);
         }
 

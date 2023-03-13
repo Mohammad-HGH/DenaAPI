@@ -7,7 +7,7 @@
    "IncludeConnectionString": false,
    "ModelNamespace": null,
    "OutputContextPath": null,
-   "OutputPath": "Models",
+   "OutputPath": "New_Model",
    "PreserveCasingWithRegex": true,
    "ProjectRootNamespace": "DenaAPI",
    "Schemas": null,
@@ -15,7 +15,39 @@
    "SelectedToBeGenerated": 0,
    "Tables": [
       {
+         "Name": "[dbo].[Attribute]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Categories]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Factor]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Intermediate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[PostDetail]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Product]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RefreshToken]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Sms]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
          "ObjectType": 0
       }
    ],

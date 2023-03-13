@@ -94,7 +94,7 @@ namespace DenaAPI.Services
             return new ProductResponse
             {
                 Success = true,
-                Message = "Attribute deleted!",
+                Message = "Product deleted!",
             };
         }
         public async Task<ProductResponse> CreateProdAsync(ProductRequest productRequest, AttributeRequest attributeRequest, long price)

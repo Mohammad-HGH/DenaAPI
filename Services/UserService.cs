@@ -42,7 +42,7 @@ namespace DenaAPI.Services
                 Phone = user.Phone,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                CreationDate = user.Ts
+                CreationDate = user.TS
             };
         }
 
@@ -184,7 +184,7 @@ namespace DenaAPI.Services
                 PasswordSalt = Convert.ToBase64String(salt),
                 FirstName = signupRequest.FirstName,
                 LastName = signupRequest.LastName,
-                Ts = DateTime.Now,
+                TS = DateTime.Now,
                 Active = true // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true
             };
 
@@ -238,7 +238,7 @@ namespace DenaAPI.Services
                 PasswordSalt = Convert.ToBase64String(salt),
                 FirstName = updateRequest.FirstName,
                 LastName = updateRequest.LastName,
-                Ts = DateTime.Now,
+                TS = DateTime.Now,
                 Active = true // You can save is false and send confirmation email to the user, then once the user confirms the email you can make it true
             };
 

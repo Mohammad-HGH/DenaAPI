@@ -5,7 +5,7 @@ using DenaAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using DenaAPI.Controllers;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +56,8 @@ builder.Services.AddTransient<ISmsService, SmsService>();
 builder.Services.AddTransient<IAttributeService, AttributeService>();
 builder.Services.AddTransient<IProductService, ProductService>();
 builder.Services.AddTransient<ICategoryService, CategoryService>();
+builder.Services.AddTransient<IFactorService, FactorService>();
+
 
 
 var app = builder.Build();
