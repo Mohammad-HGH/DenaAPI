@@ -14,7 +14,7 @@ namespace DenaAPI.Services
         private readonly ITokenService tokenService;
         private readonly string secretKey = "kjsfdhdsfBVJHG@#";
         private readonly string userApiKey = "4998f2cd6704ff5c5b8ce076";
-        Random generator = new();
+        readonly Random generator = new();
 
         public UserService(DenaDbContext denaDbContext, ITokenService tokenService)
         {
