@@ -24,6 +24,12 @@ public partial class Factor
 
     public int? Collect { get; set; }
 
+    public bool Payed { get; set; }
+
+    public bool Accepted { get; set; }
+
+    public bool Lapsed { get; set; }
+
     [Column(TypeName = "smalldatetime")]
     public DateTime CreateDate { get; set; }
 

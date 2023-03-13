@@ -108,6 +108,9 @@ namespace DenaAPI.Services
                 AttId = factorRequest.AttId,
                 ProductId = factorRequest.ProductId,
                 Number = factorRequest.Number,
+                Accepted = factorRequest.Accepted,
+                Lapsed = factorRequest.Lapsed,
+                Payed = factorRequest.Payed
             };
 
             await denaDbContext.Factors.AddAsync(factor);
