@@ -28,12 +28,7 @@ namespace DenaAPI.Controllers
 
             if (!getCatResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getCatResponse);
             }
             return Ok(getCatResponse);
         }
@@ -46,12 +41,7 @@ namespace DenaAPI.Controllers
 
             if (!getCatResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getCatResponse);
             }
             return Ok(getCatResponse);
         }
@@ -65,12 +55,7 @@ namespace DenaAPI.Controllers
 
             if (!getCatResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getCatResponse);
             }
             return Ok(getCatResponse);
         }
@@ -85,12 +70,7 @@ namespace DenaAPI.Controllers
 
             if (!getCatResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getCatResponse);
             }
             return Ok(getCatResponse);
         }
@@ -105,12 +85,7 @@ namespace DenaAPI.Controllers
 
             if (!getCatResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getCatResponse);
             }
             return Ok(getCatResponse);
         }
@@ -124,16 +99,11 @@ namespace DenaAPI.Controllers
 
             if (!getCatResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getCatResponse);
             }
             return Ok(getCatResponse);
         }
 
-        
+
     }
 }

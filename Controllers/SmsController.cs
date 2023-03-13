@@ -11,23 +11,18 @@ namespace DenaAPI.Controllers
     {
         private readonly ISmsService smsService;
         public SmsController([FromForm] ISmsService smsService) { this.smsService = smsService; }
-        [HttpGet]
-        [Route("GetUserSmsCode")]
-        public async Task<IActionResult> GetSms(int id)
-        {
-            var getSmsResponse = await smsService.GetSmsAsync(id);
-            if (!getSmsResponse.Success)
-            {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
-            }
+        /* [HttpGet]
+         [Route("GetUserSmsCode")]
+         public async Task<IActionResult> GetSms(int id)
+         {
+             var getSmsResponse = await smsService.GetSmsAsync(id);
+             if (!getSmsResponse.Success)
+             {
+                 return BadRequest(getSmsResponse);
+             }
 
-            return Ok(getSmsResponse);
-        }
+             return Ok(getSmsResponse);
+         }*/
 
 
         [HttpPost]
@@ -49,7 +44,7 @@ namespace DenaAPI.Controllers
             var smsResponse = await smsService.SmsVerifyAsync(createSmsRequest);
             if (!smsResponse.Success)
             {
-                return UnprocessableEntity(smsResponse);
+                return BadRequest(smsResponse);
             }
 
             return Ok(smsResponse.Phone);

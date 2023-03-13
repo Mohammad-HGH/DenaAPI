@@ -19,19 +19,14 @@ namespace DenaAPI.Controllers
 
         // GET: api/Attributes
         [HttpGet]
-        [Route("ListAttributes")]
+        [Route("AttributesList")]
         public async Task<IActionResult> GetAttributes()
         {
             var getAttrResponse = await attributeService.GetAllAttrsAsync();
 
             if (!getAttrResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getAttrResponse);
             }
             return Ok(getAttrResponse);
         }
@@ -45,12 +40,7 @@ namespace DenaAPI.Controllers
 
             if (!getAttrResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getAttrResponse);
             }
             return Ok(getAttrResponse);
         }
@@ -65,12 +55,7 @@ namespace DenaAPI.Controllers
 
             if (!getAttrResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Error!",
-                    ErrorCode = "500"
-                });
+                return BadRequest(getAttrResponse);
             }
             return Ok(getAttrResponse);
         }
@@ -78,19 +63,14 @@ namespace DenaAPI.Controllers
         // POST: api/Attributes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Route("AddAttribute")]
+        [Route("CreateAttribute")]
         public async Task<IActionResult> PostAttribute([FromForm] AttributeRequest attributeRequest)
         {
             var getAttrResponse = await attributeService.CreateAttrAsync(attributeRequest);
 
             if (!getAttrResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Attribute is Exist!",
-                    ErrorCode = "500"
-                });
+                return BadRequest(getAttrResponse);
             }
             return Ok(getAttrResponse);
         }
@@ -104,12 +84,7 @@ namespace DenaAPI.Controllers
 
             if (!getAttrResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getAttrResponse);
             }
             return Ok(getAttrResponse);
         }

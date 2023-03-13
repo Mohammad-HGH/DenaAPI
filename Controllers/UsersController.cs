@@ -27,18 +27,13 @@ namespace DenaAPI.Controllers
         [Route("update")]
         public async Task<IActionResult> PutUser([FromForm] UpdateRequest updateRequest)
         {
-            var updateResponse = await userService.UpdateAsync(updateRequest);
+            var getUserResponse = await userService.UpdateAsync(updateRequest);
 
-            if (!updateResponse.Success)
+            if (!getUserResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return UnprocessableEntity(getUserResponse);
             }
-            return Ok(updateResponse);
+            return Ok(getUserResponse);
         }
 
         [HttpPost]
@@ -56,18 +51,14 @@ namespace DenaAPI.Controllers
 
             }
 
-            var loginResponse = await userService.LoginAsync(loginRequest);
+            var getUserResponse = await userService.LoginAsync(loginRequest);
 
-            if (!loginResponse.Success)
+            if (!getUserResponse.Success)
             {
-                return Unauthorized(new
-                {
-                    loginResponse.ErrorCode,
-                    loginResponse.Error
-                });
+                return Unauthorized(getUserResponse);
             }
 
-            return Ok(loginResponse);
+            return Ok(getUserResponse);
         }
 
         [HttpPost]
@@ -83,14 +74,14 @@ namespace DenaAPI.Controllers
                 });
             }
 
-            var validateRefreshTokenResponse = await tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
+            var getRefreshTokenResponse = await tokenService.ValidateRefreshTokenAsync(refreshTokenRequest);
 
-            if (!validateRefreshTokenResponse.Success)
+            if (!getRefreshTokenResponse.Success)
             {
-                return BadRequest(validateRefreshTokenResponse);
+                return BadRequest(getRefreshTokenResponse);
             }
 
-            var tokenResponse = await tokenService.GenerateTokensAsync(validateRefreshTokenResponse.UserId);
+            var tokenResponse = await tokenService.GenerateTokensAsync(getRefreshTokenResponse.UserId);
 
             return Ok(new TokenResponse { AccessToken = tokenResponse.Item1, RefreshToken = tokenResponse.Item2 });
         }
@@ -112,14 +103,14 @@ namespace DenaAPI.Controllers
                 }
             }
 
-            var signupResponse = await userService.SignupAsync(signupRequest);
+            var getSignupResponse = await userService.SignupAsync(signupRequest);
 
-            if (!signupResponse.Success)
+            if (!getSignupResponse.Success)
             {
-                return UnprocessableEntity(signupResponse);
+                return UnprocessableEntity(getSignupResponse);
             }
 
-            return Ok(signupResponse.Phone);
+            return Ok(getSignupResponse.Phone);
         }
 
         [Authorize]
@@ -137,12 +128,15 @@ namespace DenaAPI.Controllers
             return Ok();
         }
 
-        [Authorize]
+        /* [Authorize]*/
         [HttpGet]
         [Route("info")]
-        public async Task<IActionResult> Info()
+        public async Task<IActionResult> Info(int id)
         {
-            var userResponse = await userService.GetInfoAsync(UserID);
+            var userResponse = await userService.GetInfoAsync(id);
+            /* if u want to check auth users detail please uncomment
+             * [Authorize] then put UserID instead id (prev line) */
+
 
             if (!userResponse.Success)
             {

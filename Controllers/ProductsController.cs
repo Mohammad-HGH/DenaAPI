@@ -18,19 +18,14 @@ namespace DenaAPI.Controllers
 
         // GET: api/Products
         [HttpGet]
-        [Route("ProductList")]
+        [Route("ProductsList")]
         public async Task<IActionResult> GetProducts()
         {
             var getProductResponse = await productService.GetAllProdsAsync();
 
             if (!getProductResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getProductResponse);
             }
             return Ok(getProductResponse);
         }
@@ -44,12 +39,7 @@ namespace DenaAPI.Controllers
 
             if (!getProductResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getProductResponse);
             }
             return Ok(getProductResponse);
         }
@@ -65,15 +55,10 @@ namespace DenaAPI.Controllers
 
             if (!getProductResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getProductResponse);
             }
             return Ok(getProductResponse);
-            
+
 
         }
 
@@ -87,15 +72,10 @@ namespace DenaAPI.Controllers
 
             if (!getProductResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getProductResponse);
             }
             return Ok(getProductResponse);
-            
+
         }
 
         // DELETE: api/Products/5
@@ -107,15 +87,10 @@ namespace DenaAPI.Controllers
 
             if (!getProductResponse.Success)
             {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Error = "Not found",
-                    ErrorCode = "S02"
-                });
+                return BadRequest(getProductResponse);
             }
             return Ok(getProductResponse);
-            
+
         }
 
 
