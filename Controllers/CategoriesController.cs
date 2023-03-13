@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DenaAPI.Models;
-using DenaAPI.Services;
 using DenaAPI.Interfaces;
 using DenaAPI.DTO;
 

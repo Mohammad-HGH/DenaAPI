@@ -7,6 +7,7 @@ namespace DenaAPI.Interfaces
     {
         Task<FactorResponse> CreateFacAsync(FactorRequest factorRequest, PostDetailRequest postDetailRequest);
         Task<FactorResponse> GetFacsAsync();
+        Task<FactorResponse> ExportExcelAsync();
         Task<FactorResponse> GetFacAsync(int id);
         Task<FactorResponse> DeleteFacAsync(int id);
         Task<FactorResponse> UpdateFacAsync(int id, FactorRequest factorRequest);

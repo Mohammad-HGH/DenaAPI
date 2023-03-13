@@ -1,8 +1,10 @@
-﻿using DenaAPI.DTO;
+﻿using ClosedXML.Excel;
+using DenaAPI.DTO;
 using DenaAPI.Interfaces;
 using DenaAPI.Models;
 using DenaAPI.Responses;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace DenaAPI.Services
 {
@@ -12,6 +14,49 @@ namespace DenaAPI.Services
         public FactorService(DenaDbContext denaDbContext)
         {
             this.denaDbContext = denaDbContext;
+        }
+        public async Task<FactorResponse> ExportExcelAsync()
+        {
+            var factors = await denaDbContext.Factors.ToListAsync();
+
+            //using System.Data;  
+            DataTable dt = new("Factor");
+            dt.Columns.AddRange(new DataColumn[11] {
+                new DataColumn("Id"),
+                new DataColumn("ProductId"),
+                new DataColumn("UserId"),
+                new DataColumn("AttId"),
+                new DataColumn("Number"),
+                new DataColumn("Collect"),
+                new DataColumn("CreatedDate"),
+                new DataColumn("PostId"),
+                new DataColumn("Payed"),
+                new DataColumn("Accepted"),
+                new DataColumn("Lapsed"),
+            });
+
+            foreach (var fact in factors) dt.Rows.Add(
+                fact.Id,
+                fact.ProductId,
+                fact.UserId,
+                fact.AttId,
+                fact.Number,
+                fact.Collect,
+                fact.CreateDate,
+                fact.PostId,
+                fact.Payed,
+                fact.Accepted,
+                fact.Lapsed);
+
+            return new FactorResponse
+            {
+                Success = true,
+                ExportData = dt
+            };
+
+
+
+
         }
         public async Task<FactorResponse> GetFacAsync(int FactorId)
         {

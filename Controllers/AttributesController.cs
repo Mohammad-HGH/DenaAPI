@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using DenaAPI.DTO;
-using DenaAPI.Services;
 using DenaAPI.Interfaces;
 
 namespace DenaAPI.Controllers

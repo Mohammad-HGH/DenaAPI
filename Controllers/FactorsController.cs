@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DenaAPI;
-using DenaAPI.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using DenaAPI.DTO;
-using DenaAPI.Services;
 using DenaAPI.Interfaces;
+using ClosedXML.Excel;
 
 namespace DenaAPI.Controllers
 {
@@ -109,6 +101,21 @@ namespace DenaAPI.Controllers
             return Ok(getFacResponse);
         }
 
+        [HttpGet]
+        [Route("ExportFactorExcel")]
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var getFacResponse = await factorService.ExportExcelAsync();
 
+            if (!getFacResponse.Success) return BadRequest(getFacResponse);
+
+
+            //using ClosedXML.Excel;  
+            using XLWorkbook wb = new();
+            wb.Worksheets.Add(getFacResponse.ExportData);
+            using MemoryStream stream = new();
+            wb.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Factor-{DateTime.Now}.xlsx");
+        }
     }
 }
